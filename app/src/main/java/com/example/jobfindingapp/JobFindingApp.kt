@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,8 +42,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.jobfindingapp.ui.screens.home.HomeScreen
 
 @Composable
@@ -54,7 +58,17 @@ fun JobFindingApp() {
 @Composable
 fun JobFindingAppBar(modifier: Modifier = Modifier) {
     CenterAlignedTopAppBar(
-        title = { Text(text = "hii, Jay") },
+        title = {
+            Text(
+                text = "hii, Jay",
+                style = TextStyle(
+                    fontSize = 18.sp,
+//                    fontFamily = FontFamily(Font(R.font.poppins)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF1A1A1A),
+                )
+            )
+        },
         modifier = modifier,
         navigationIcon = {
             Icon(imageVector = ImageVector.vectorResource(R.drawable.icon_menu), null)
@@ -62,21 +76,22 @@ fun JobFindingAppBar(modifier: Modifier = Modifier) {
         actions = {
             AppBarAvatar(R.drawable.ic_launcher_foreground)
         },
+        windowInsets = WindowInsets(left = 35.dp, right = 35.dp, top = 56.dp)
     )
 }
 
 @Composable
 fun AppBarAvatar(@DrawableRes avatarDrawable: Int) {
     Box(contentAlignment = Alignment.Center) {
-        Spacer(
+        Box(
             modifier = Modifier
                 .size(60.dp)
                 .clip(CircleShape)
                 .background(Color.Black),
         )
-        Spacer(
+        Box(
             modifier = Modifier
-                .size(50.dp)
+                .size(55.dp)
                 .clip(CircleShape)
                 .background(Color.White),
         )
@@ -84,7 +99,7 @@ fun AppBarAvatar(@DrawableRes avatarDrawable: Int) {
             painter = painterResource(avatarDrawable),
             contentDescription = null,
             modifier = Modifier
-                .size(40.dp)
+                .size(45.dp)
                 .clip(CircleShape)
                 .background(Color.Green)
         )
@@ -143,7 +158,7 @@ fun RowScope.JobFindingNavigationBarItem(
                 if (selected) {
                     Box(
                         modifier = Modifier
-                            .height(10.dp)
+                            .height(4.dp)
                             .width(60.dp)
                             .background(Color.Magenta)
                     )
