@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Bookmark
@@ -29,12 +31,19 @@ import androidx.compose.material.icons.filled.Message
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jobfindingapp.ui.screens.home.HomeScreen
+import com.example.jobfindingapp.ui.theme.LightPink
 
 @Composable
 fun JobFindingApp() {
@@ -61,76 +71,60 @@ fun JobFindingAppBar(modifier: Modifier = Modifier) {
         title = {
             Text(
                 text = "hii, Jay",
-                style = TextStyle(
-                    fontSize = 18.sp,
-//                    fontFamily = FontFamily(Font(R.font.poppins)),
-                    fontWeight = FontWeight(500),
-                    color = Color(0xFF1A1A1A),
-                )
+                style = MaterialTheme.typography.titleLarge,
             )
         },
         modifier = modifier,
         navigationIcon = {
-            Icon(imageVector = ImageVector.vectorResource(R.drawable.icon_menu), null)
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(imageVector = ImageVector.vectorResource(R.drawable.icon_menu), null)
+            }
         },
         actions = {
-            AppBarAvatar(R.drawable.ic_launcher_foreground)
+            Image(
+//                painter = painterResource(R.drawable.image_profile),
+                painter = painterResource(R.drawable.image_profile),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(45.dp)
+                    .clip(CircleShape)
+            )
         },
-        windowInsets = WindowInsets(left = 35.dp, right = 35.dp, top = 56.dp)
+        windowInsets = WindowInsets(left = 35.dp, right = 35.dp),
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background,
+        ),
     )
-}
-
-@Composable
-fun AppBarAvatar(@DrawableRes avatarDrawable: Int) {
-    Box(contentAlignment = Alignment.Center) {
-        Box(
-            modifier = Modifier
-                .size(60.dp)
-                .clip(CircleShape)
-                .background(Color.Black),
-        )
-        Box(
-            modifier = Modifier
-                .size(55.dp)
-                .clip(CircleShape)
-                .background(Color.White),
-        )
-        Image(
-            painter = painterResource(avatarDrawable),
-            contentDescription = null,
-            modifier = Modifier
-                .size(45.dp)
-                .clip(CircleShape)
-                .background(Color.Green)
-        )
-    }
 }
 
 @Composable
 fun JobFindingBottomBar(modifier: Modifier = Modifier) {
     NavigationBar(
-        modifier = modifier
+        modifier = modifier,
+        containerColor = Color.White,
     ) {
-        val selectedPage: String = "bookmark"
+        var selectedPage: String by remember {
+            mutableStateOf("home")
+        }
 
         JobFindingNavigationBarItem(
             selected = selectedPage == "home",
-            onClick = { /*TODO*/ },
+            onClick = { selectedPage = "home" },
             icon = ImageVector.vectorResource(id = R.drawable.icon_home),
         )
         JobFindingNavigationBarItem(
             selected = selectedPage == "bookmark",
-            onClick = { /*TODO*/ },
+            onClick = { selectedPage = "bookmark" },
             icon = ImageVector.vectorResource(id = R.drawable.icon_bookmark),
         )
         JobFindingNavigationBarItem(
             selected = selectedPage == "chat",
-            onClick = { /*TODO*/ },
+            onClick = { selectedPage = "chat" },
             icon = ImageVector.vectorResource(id = R.drawable.icon_message),
         )
         JobFindingNavigationBarItem(
             selected = selectedPage == "profile",
-            onClick = { /*TODO*/ },
+            onClick = { selectedPage = "profile" },
             icon = ImageVector.vectorResource(id = R.drawable.icon_profile),
         )
     }
@@ -160,14 +154,14 @@ fun RowScope.JobFindingNavigationBarItem(
                         modifier = Modifier
                             .height(4.dp)
                             .width(60.dp)
-                            .background(Color.Magenta)
+                            .background(LightPink)
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (selected) Color.Magenta else Color.Black,
+                    tint = if (selected) LightPink else Color.Black,
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
