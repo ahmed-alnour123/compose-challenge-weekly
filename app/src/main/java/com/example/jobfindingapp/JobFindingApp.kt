@@ -1,14 +1,10 @@
 package com.example.jobfindingapp
 
-import android.graphics.drawable.Icon
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -19,15 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Message
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -51,13 +38,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.jobfindingapp.ui.screens.home.HomeScreen
 import com.example.jobfindingapp.ui.theme.LightPink
+import com.example.jobfindingapp.utils.BottomBarItem
 
 @Composable
 fun JobFindingApp() {
@@ -74,23 +59,29 @@ fun JobFindingAppBar(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.titleLarge,
             )
         },
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth(),
+//            .padding(horizontal = 30.dp),
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = ImageVector.vectorResource(R.drawable.icon_menu), null)
+            IconButton(modifier = Modifier, onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_menu_icon),
+                    null,
+//                    modifier = Modifier.fillMaxSize()
+                )
             }
         },
         actions = {
             Image(
 //                painter = painterResource(R.drawable.image_profile),
-                painter = painterResource(R.drawable.image_profile),
+                painter = painterResource(R.drawable.img_profile),
                 contentDescription = null,
                 modifier = Modifier
                     .size(45.dp)
                     .clip(CircleShape)
             )
         },
-        windowInsets = WindowInsets(left = 35.dp, right = 35.dp),
+        windowInsets = WindowInsets(left = 20.dp, right = 20.dp),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
@@ -103,29 +94,29 @@ fun JobFindingBottomBar(modifier: Modifier = Modifier) {
         modifier = modifier,
         containerColor = Color.White,
     ) {
-        var selectedPage: String by remember {
-            mutableStateOf("home")
+        var selectedPage: BottomBarItem by remember {
+            mutableStateOf(BottomBarItem.Home)
         }
 
         JobFindingNavigationBarItem(
-            selected = selectedPage == "home",
-            onClick = { selectedPage = "home" },
-            icon = ImageVector.vectorResource(id = R.drawable.icon_home),
+            selected = selectedPage == BottomBarItem.Home,
+            onClick = { selectedPage = BottomBarItem.Home },
+            icon = ImageVector.vectorResource(id = R.drawable.ic_home_icon),
         )
         JobFindingNavigationBarItem(
-            selected = selectedPage == "bookmark",
-            onClick = { selectedPage = "bookmark" },
-            icon = ImageVector.vectorResource(id = R.drawable.icon_bookmark),
+            selected = selectedPage == BottomBarItem.Bookmark,
+            onClick = { selectedPage = BottomBarItem.Bookmark },
+            icon = ImageVector.vectorResource(id = R.drawable.ic_bookmark_icon),
         )
         JobFindingNavigationBarItem(
-            selected = selectedPage == "chat",
-            onClick = { selectedPage = "chat" },
-            icon = ImageVector.vectorResource(id = R.drawable.icon_message),
+            selected = selectedPage == BottomBarItem.Chat,
+            onClick = { selectedPage = BottomBarItem.Chat },
+            icon = ImageVector.vectorResource(id = R.drawable.ic_message_icon),
         )
         JobFindingNavigationBarItem(
-            selected = selectedPage == "profile",
-            onClick = { selectedPage = "profile" },
-            icon = ImageVector.vectorResource(id = R.drawable.icon_profile),
+            selected = selectedPage == BottomBarItem.Profile,
+            onClick = { selectedPage = BottomBarItem.Profile },
+            icon = ImageVector.vectorResource(id = R.drawable.ic_profile_icon),
         )
     }
 }
