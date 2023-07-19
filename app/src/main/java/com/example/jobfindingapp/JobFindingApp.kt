@@ -51,36 +51,17 @@ fun JobFindingApp() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JobFindingAppBar(modifier: Modifier = Modifier) {
+fun JobFindingAppBar(
+    title: @Composable () -> Unit,
+    navigationIcon: @Composable () -> Unit,
+    actions: @Composable RowScope.() -> Unit,
+    modifier: Modifier = Modifier,
+) {
     CenterAlignedTopAppBar(
-        title = {
-            Text(
-                text = "hii, Jay",
-                style = MaterialTheme.typography.titleLarge,
-            )
-        },
-        modifier = modifier
-            .fillMaxWidth(),
-//            .padding(horizontal = 30.dp),
-        navigationIcon = {
-            IconButton(modifier = Modifier, onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_menu_icon),
-                    null,
-//                    modifier = Modifier.fillMaxSize()
-                )
-            }
-        },
-        actions = {
-            Image(
-//                painter = painterResource(R.drawable.image_profile),
-                painter = painterResource(R.drawable.img_profile),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(45.dp)
-                    .clip(CircleShape)
-            )
-        },
+        title = title,
+        modifier = modifier,
+        navigationIcon = navigationIcon,
+        actions = actions,
         windowInsets = WindowInsets(left = 20.dp, right = 20.dp),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
@@ -165,7 +146,31 @@ fun RowScope.JobFindingNavigationBarItem(
 @Composable
 fun JobFindingAppBarPreview() {
     Scaffold(
-        topBar = { JobFindingAppBar() },
+        topBar = {
+            JobFindingAppBar(
+                title = {
+                    Text(
+                        text = "hii, Jay",
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { }) {
+                        Icon(imageVector = ImageVector.vectorResource(R.drawable.ic_menu_icon), null)
+                    }
+                },
+                actions = {
+                    Image(
+//                painter = painterResource(R.drawable.image_profile),
+                        painter = painterResource(R.drawable.img_profile),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(45.dp)
+                            .clip(CircleShape)
+                    )
+                },
+            )
+        },
         bottomBar = { JobFindingBottomBar() },
     ) {
         val a = it

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.jobfindingapp.ui.screens.home
 
 import androidx.annotation.DrawableRes
@@ -6,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -45,6 +46,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -57,119 +59,151 @@ import androidx.compose.ui.unit.dp
 import com.example.jobfindingapp.JobFindingAppBar
 import com.example.jobfindingapp.JobFindingBottomBar
 import com.example.jobfindingapp.R
+import com.example.jobfindingapp.ui.theme.JobFindingAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
     Scaffold(
         modifier = modifier,
-        topBar = { JobFindingAppBar() },
+        topBar = {
+            JobFindingAppBar(
+                title = {
+                    Text(
+                        text = "hii, Jay",
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { }) {
+                        Icon(imageVector = ImageVector.vectorResource(R.drawable.ic_menu_icon), null)
+                    }
+                },
+                actions = {
+                    Image(
+                        painter = painterResource(R.drawable.img_profile),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(45.dp)
+                            .clip(CircleShape)
+                    )
+                },
+            )
+        },
         bottomBar = { JobFindingBottomBar() },
     ) { innerPadding ->
-        var searchValue by remember {
-            mutableStateOf("")
-        }
-
-        val horizontalPadding = 35.dp
-        Column(
+        HomeScreenContent(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
+        )
+    }
+}
+
+@Composable
+fun HomeScreenContent(modifier: Modifier = Modifier) {
+    var searchValue by remember {
+        mutableStateOf("")
+    }
+
+    val horizontalPadding = 35.dp
+
+    Column(
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = horizontalPadding)
         ) {
-            Column(
+            Text(
+                "Your skill is required for many jobs",
+                style = MaterialTheme.typography.displayLarge,
                 modifier = Modifier
-                    .padding(horizontal = horizontalPadding)
+                    .fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(27.dp))
+            Box(
             ) {
-                Text(
-                    "Your skill is required for many jobs",
-                    style = MaterialTheme.typography.displayLarge,
+                Image(
+                    painter = painterResource(id = R.drawable.img_home_screen),
+                    contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .aspectRatio(358 / 282f)
+                        .align(Alignment.Center),
                 )
-                Spacer(modifier = Modifier.height(27.dp))
-                Box(
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.img_home_screen),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(358 / 282f)
-                            .align(Alignment.Center),
-                    )
-                    TextField(
-                        value = searchValue,
-                        onValueChange = { searchValue = it },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                null,
-                                tint = Color.White,
-                                modifier = Modifier.offset(y = -3.dp)
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                "Search any job...",
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    fontWeight = FontWeight.W600,
-                                    color = Color.White,
-                                ),
-                            )
-                        },
-                        modifier = Modifier
-                            .size(247.dp, 65.dp)
-                            .align(Alignment.BottomCenter),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            textColor = Color.White,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent
-                        ),
-                        shape = CircleShape,
-                    )
-                }
-                Spacer(modifier = Modifier.height(27.dp))
-                Row(
+                TextField(
+                    value = searchValue,
+                    onValueChange = { searchValue = it },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            null,
+                            tint = Color.White,
+                            modifier = Modifier.offset(y = -3.dp)
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            "Search any job...",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.W600,
+                                color = Color.White,
+                            ),
+                        )
+                    },
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        "Based on your skills",
-                        style = MaterialTheme.typography.displayMedium,
-                    )
-                    Text(
-                        "view all",
-                        style = MaterialTheme.typography.titleSmall,
-                        modifier = Modifier.clickable { },
-                    )
-                }
-                Spacer(modifier = Modifier.height(20.dp))
+                        .size(247.dp, 65.dp)
+                        .align(Alignment.BottomCenter),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        textColor = Color.White,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    ),
+                    shape = CircleShape,
+                )
             }
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
+            Spacer(modifier = Modifier.height(27.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
+                Text(
+                    "Based on your skills",
+                    style = MaterialTheme.typography.displayMedium,
+                )
+                Text(
+                    "view all",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.clickable { },
+                )
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+        ) {
+            item {
+                Spacer(modifier = Modifier.width(15.dp))
+            }
+            item {
+                JobCard(R.drawable.ic_swift_icon)
+            }
+            for (i in 1..5) {
                 item {
-                    Spacer(modifier = Modifier.width(15.dp))
-                }
-                item {
-                    JobCard(R.drawable.ic_swift_icon)
-                }
-                for (i in 1..5) {
-                    item {
-                        JobCard(R.drawable.ic_c_sharp_icon)
-                    }
-                }
-                item {
-                    Spacer(modifier = Modifier.width(20.dp))
+                    JobCard(R.drawable.ic_c_sharp_icon)
                 }
             }
-            Spacer(modifier = Modifier.height(10.dp))
+            item {
+                Spacer(modifier = Modifier.width(20.dp))
+            }
         }
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
 
@@ -283,5 +317,7 @@ fun IconText(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    JobFindingAppTheme {
+        HomeScreen()
+    }
 }
