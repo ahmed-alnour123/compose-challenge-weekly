@@ -1,21 +1,20 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.jobfindingapp
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,28 +39,94 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.jobfindingapp.data.DataSource
+import com.example.jobfindingapp.ui.screens.details.DetailsScreen
 import com.example.jobfindingapp.ui.screens.home.HomeScreen
 import com.example.jobfindingapp.ui.theme.LightPink
+import com.example.jobfindingapp.utils.AppBarAction
 import com.example.jobfindingapp.utils.BottomBarItem
+import com.example.jobfindingapp.utils.JobFindingScreens
 
 @Composable
 fun JobFindingApp() {
-    HomeScreen()
+    var currentScreen by remember {
+        mutableStateOf(JobFindingScreens.Home)
+    }
+    var job by remember {
+        mutableStateOf(DataSource.jobsList.first())
+    }
+
+    when (currentScreen) {
+        JobFindingScreens.Home -> HomeScreen(
+            onApplyButtonClicked = {
+                newJob ->
+                currentScreen = JobFindingScreens.Details
+                job = newJob
+            }
+        )
+
+        JobFindingScreens.Details -> DetailsScreen(
+            job = job,
+            onBackButtonClicked = { currentScreen = JobFindingScreens.Home }
+        )
+    }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JobFindingAppBar(
-    title: @Composable () -> Unit,
-    navigationIcon: @Composable () -> Unit,
-    actions: @Composable RowScope.() -> Unit,
+    title: String,
+    isHomeScreen: Boolean,
+    appBarAction: AppBarAction,
     modifier: Modifier = Modifier,
+    onBackButtonClicked: () -> Unit = {},
+    @DrawableRes profileImage: Int = R.drawable.img_profile,
 ) {
     CenterAlignedTopAppBar(
-        title = title,
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        },
+        navigationIcon = {
+            if (isHomeScreen) {
+                IconButton(onClick = { }) {
+                    Icon(imageVector = ImageVector.vectorResource(R.drawable.ic_menu_icon), null)
+                }
+            } else {
+                IconButton(onClick = onBackButtonClicked) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, null)
+                }
+            }
+        },
+        actions = {
+            when (appBarAction) {
+                AppBarAction.None -> {}
+                AppBarAction.Profile -> {
+                    Image(
+                        painter = painterResource(profileImage),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(45.dp)
+                            .clip(CircleShape)
+                    )
+                }
+
+                AppBarAction.Bookmark -> {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_bookmark_icon),
+                            contentDescription = null,
+                            tint = Color.Black,
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clip(CircleShape)
+                        )
+                    }
+                }
+            }
+        },
         modifier = modifier,
-        navigationIcon = navigationIcon,
-        actions = actions,
         windowInsets = WindowInsets(left = 20.dp, right = 20.dp),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
@@ -112,63 +177,42 @@ fun RowScope.JobFindingNavigationBarItem(
     NavigationBarItem(
         selected = false,
         onClick = onClick,
-        modifier = modifier,//.weight(1f),
+        modifier = modifier,
         icon = {
-            Column(
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Box(
                 modifier = Modifier
                     .fillMaxHeight()
-//                    .background(Color.Green)
             ) {
                 if (selected) {
                     Box(
                         modifier = Modifier
+                            .align(Alignment.TopCenter)
                             .height(4.dp)
                             .width(60.dp)
                             .background(LightPink)
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
                     tint = if (selected) LightPink else Color.Black,
+                    modifier = Modifier
+                        .align(Alignment.Center)
                 )
-                Spacer(modifier = Modifier.weight(1f))
             }
         },
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun JobFindingAppBarPreview() {
     Scaffold(
         topBar = {
             JobFindingAppBar(
-                title = {
-                    Text(
-                        text = "hii, Jay",
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { }) {
-                        Icon(imageVector = ImageVector.vectorResource(R.drawable.ic_menu_icon), null)
-                    }
-                },
-                actions = {
-                    Image(
-//                painter = painterResource(R.drawable.image_profile),
-                        painter = painterResource(R.drawable.img_profile),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(45.dp)
-                            .clip(CircleShape)
-                    )
-                },
+                title = "Hii, Jay",
+                isHomeScreen = true,
+                appBarAction = AppBarAction.Profile,
             )
         },
         bottomBar = { JobFindingBottomBar() },

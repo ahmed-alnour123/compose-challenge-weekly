@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">JobFindingApp</string>
+    <string name="search_any_job">Search any job…</string>
+    <string name="apply_now">Apply now</string>
+    <string name="hi_user">hi, %s</string>
+    <string name="your_skill_is_required">Your skill is required for many jobs</string>
+    <string name="based_on_your_skills">Based on your skills</string>
+    <string name="view_all">view all</string>
+    <string name="ratings">Ratings</string>
+    <string name="type">Type</string>
+    <string name="salary">Salary</string>
+    <string name="about_company">About Company</string>
+    <string name="job_description">Job Description</string>
+    <string name="about_job">About Job</string>
+
 </resources>

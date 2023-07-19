@@ -2,26 +2,25 @@
 
 package com.example.jobfindingapp.ui.screens.details
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,52 +28,43 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jobfindingapp.JobFindingAppBar
 import com.example.jobfindingapp.R
-import com.example.jobfindingapp.ui.screens.home.IconText
+import com.example.jobfindingapp.data.DataSource
+import com.example.jobfindingapp.models.Job
 import com.example.jobfindingapp.ui.theme.DarkGray
 import com.example.jobfindingapp.ui.theme.JobFindingAppTheme
-import com.example.jobfindingapp.ui.theme.LightGray
 import com.example.jobfindingapp.ui.theme.LightPink
-import com.example.jobfindingapp.ui.theme.TransparentLightPink
+import com.example.jobfindingapp.utils.AppBarAction
+import com.example.jobfindingapp.utils.widgets.IconText
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsScreen(modifier: Modifier = Modifier) {
+fun DetailsScreen(
+    job: Job,
+    onBackButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val uiState = DetailsScreenUiState(job)
+
+    BackHandler {
+        onBackButtonClicked()
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
             JobFindingAppBar(
-                title = {
-                    Text(
-                        text = "Infosys",
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { }) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, null)
-                    }
-                },
-                actions = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_bookmark_icon),
-                        contentDescription = null,
-                        tint = Color.Black,
-                        modifier = Modifier
-                            .size(25.dp)
-                            .clip(CircleShape)
-                    )
-                },
+                title = job.companyName,
+                isHomeScreen = false,
+                appBarAction = AppBarAction.Bookmark,
+                onBackButtonClicked = onBackButtonClicked,
             )
         },
         bottomBar = {
@@ -86,18 +76,24 @@ fun DetailsScreen(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "Apply now",
+                    text = stringResource(id = R.string.apply_now),
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
         }
     ) { innerPadding ->
-        DetailsScreenContent(modifier = Modifier.padding(innerPadding))
+        DetailsScreenContent(
+            uiState,
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+        )
     }
 }
 
 @Composable
-fun DetailsScreenContent(modifier: Modifier = Modifier) {
+fun DetailsScreenContent(uiState: DetailsScreenUiState, modifier: Modifier = Modifier) {
+    val job = uiState.job
     Column(
         verticalArrangement = Arrangement.spacedBy(35.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -109,18 +105,18 @@ fun DetailsScreenContent(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(7.dp),
         ) {
             Image(
-                painterResource(id = R.drawable.ic_c_sharp_icon),
+                painterResource(job.icon),
                 null,
                 modifier = Modifier
                     .size(80.dp),
             )
             Text(
-                "C Sharp Developer",
+                job.title,
                 style = MaterialTheme.typography.displayMedium
             )
             Row {
                 Text(
-                    "Infosys",
+                    job.companyName,
                     style = MaterialTheme.typography.titleMedium.copy(
                         color = DarkGray,
                     ),
@@ -129,11 +125,13 @@ fun DetailsScreenContent(modifier: Modifier = Modifier) {
                     "\u2022",
                     textAlign = TextAlign.Center,
                     fontSize = 26.sp,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .offset(y = -4.dp),
                     color = DarkGray,
                 )
                 Text(
-                    "Gurugram",
+                    job.city,
                     style = MaterialTheme.typography.titleMedium.copy(
                         color = DarkGray,
                     ),
@@ -142,11 +140,13 @@ fun DetailsScreenContent(modifier: Modifier = Modifier) {
                     "\u2022",
                     textAlign = TextAlign.Center,
                     fontSize = 26.sp,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .offset(y = -4.dp),
                     color = DarkGray,
                 )
                 Text(
-                    "1 Day ago",
+                    job.postedDate,
                     style = MaterialTheme.typography.titleMedium.copy(
                         color = DarkGray,
                     ),
@@ -158,17 +158,17 @@ fun DetailsScreenContent(modifier: Modifier = Modifier) {
             Row {
                 Spacer(modifier = Modifier.weight(0.25f))
                 Text(
-                    "Salary",
+                    stringResource(id = R.string.salary),
                     style = MaterialTheme.typography.bodySmall,
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    "Type",
+                    stringResource(id = R.string.type),
                     style = MaterialTheme.typography.bodySmall,
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    "Ratings",
+                    stringResource(id = R.string.ratings),
                     style = MaterialTheme.typography.bodySmall,
                 )
                 Spacer(modifier = Modifier.weight(0.25f))
@@ -176,21 +176,21 @@ fun DetailsScreenContent(modifier: Modifier = Modifier) {
             Row {
                 Spacer(modifier = Modifier.weight(0.25f))
                 Text(
-                    "$10 k",
+                    job.salary,
                     style = MaterialTheme.typography.titleLarge.copy(
                         color = LightPink,
                     ),
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    "Full time",
+                    job.jobTime,
                     style = MaterialTheme.typography.titleLarge.copy(
                         color = LightPink,
                     ),
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 IconText(
-                    text = "4.5",
+                    text = job.rating,
                     textStyle = MaterialTheme.typography.titleLarge.copy(
                         color = LightPink,
                     ),
@@ -201,118 +201,65 @@ fun DetailsScreenContent(modifier: Modifier = Modifier) {
                 Spacer(modifier = Modifier.weight(0.25f))
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(55.dp)
-                .background(color = Color(0x1ACCAFFF), shape = RoundedCornerShape(size = 16.dp))
-                .padding(horizontal = 4.dp, vertical = 7.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            TextButton(
-                modifier = Modifier.weight(1f),
-                onClick = { /*TODO*/ }) {
-                Text(
-                    text = "About Company",
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-            TextButton(modifier = Modifier
-                .weight(1f)
-                .background(
-                    color = Color(0xFFCCAFFF),
-                    shape = RoundedCornerShape(size = 12.dp)
-                ),
-                onClick = { /*TODO*/ }) {
-                Text(
-                    text = "Job Description",
-                    style = MaterialTheme.typography.labelMedium,
-                )
-            }
-        }
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Text(
-                "About Job",
-                style = MaterialTheme.typography.titleLarge,
-            )
-            Text(
-                """
-               Infosys Limited is an Indian multinational information
-               technology company that provides business consulting,
-               information technology and outsource services. 
-            """.trimIndent().replace("\n", " "),
-                style = MaterialTheme.typography.titleSmall,
-            )
-        }
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Text(
-                "Job description",
-                style = MaterialTheme.typography.titleLarge,
-            )
-            Text(
-                """
-                We are looking for a C# developer to build
-                software using languages, technologies of the
-                .NET framework. 
-                You will create applications from scratch, configure
-                existing systems and provide user support.Must have
-                Potential to design, develop program independently.
-            """.trimIndent().replace("\n", " "),
-                style = MaterialTheme.typography.titleSmall,
-            )
-        }
+        AboutSections(job)
     }
 }
+
 
 @Composable
-fun DetailsLine() {
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center,
+fun AboutSections(job: Job) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(55.dp)
+            .background(color = Color(0x1ACCAFFF), shape = RoundedCornerShape(size = 16.dp))
+            .padding(horizontal = 4.dp, vertical = 7.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            val Point = @Composable {
-                Box(
-                    modifier = Modifier
-                        .size(17.dp)
-                        .clip(CircleShape)
-                        .background(LightPink)
-                )
-            }
-            val Line = @Composable { color: Color? ->
-                Box(
-                    modifier = Modifier
-                        .height(6.dp)
-                        .weight(1f)
-                        .background(color ?: MaterialTheme.colorScheme.primary)
-                )
-            }
-            Line(TransparentLightPink)
-            Point()
-            Line(null)
-
-            Line(null)
-            Point()
-            Line(null)
-
-            Line(null)
-            Point()
-            Line(TransparentLightPink)
+        TextButton(
+            modifier = Modifier.weight(1f),
+            onClick = { /*TODO*/ }) {
+            Text(
+                text = stringResource(id = R.string.about_company),
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        TextButton(modifier = Modifier
+            .weight(1f)
+            .background(
+                color = Color(0xFFCCAFFF),
+                shape = RoundedCornerShape(size = 12.dp)
+            ),
+            onClick = { /*TODO*/ }) {
+            Text(
+                text = stringResource(id = R.string.job_description),
+                style = MaterialTheme.typography.labelMedium,
+            )
         }
     }
+
+    TextSection(
+        title = stringResource(id = R.string.about_job),
+        body = job.aboutJob,
+    )
+    TextSection(
+        title = stringResource(id = R.string.job_description),
+        body = job.description,
+    )
 }
+
+data class DetailsScreenUiState(
+    val job: Job,
+)
 
 @Preview
 @Composable
 fun DetailsScreenPreview() {
     JobFindingAppTheme {
-        DetailsScreen()
+        DetailsScreen(
+            job = DataSource.jobsList.first(),
+            onBackButtonClicked = {}
+        )
     }
 }

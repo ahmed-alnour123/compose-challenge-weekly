@@ -6,3 +6,14 @@ enum class BottomBarItem {
     Chat,
     Profile,
 }
+
+enum class AppBarAction {
+    Profile,
+    Bookmark,
+    None,
+}
+
+enum class JobFindingScreens{
+    Home,
+    Details,
+}
