@@ -154,7 +154,7 @@ fun DetailsScreenContent(uiState: DetailsScreenUiState, modifier: Modifier = Mod
             }
         }
         Column {
-            DetailsLine()
+            SalaryRangeBar()
             Row {
                 Spacer(modifier = Modifier.weight(0.25f))
                 Text(

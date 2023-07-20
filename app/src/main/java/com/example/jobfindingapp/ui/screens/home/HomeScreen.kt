@@ -115,6 +115,7 @@ private fun JobList(
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = modifier,
     ) {
         item { Spacer(modifier = Modifier.width(15.dp)) }
         items(jobs) { job ->
